@@ -1,14 +1,19 @@
 const express = require('express');
-const appController = require('../controllers/AppController');
+const AppController = require('../controllers/AppController');
+const UsersController = require('../controllers/UsersController');
 
 const router = express.Router();
 
 router.get('/status', (req, res) => {
-  appController.getStatus(req, res);
+  AppController.getStatus(req, res);
 });
 
 router.get('/stats', async (req, res) => {
-  await appController.getStats(req, res);
+  await AppController.getStats(req, res);
+});
+
+router.post('/users', async (req, res) => {
+  await UsersController.postNew(req, res);
 });
 
 module.exports = router;
