@@ -1,5 +1,4 @@
 import { MongoClient } from 'mongodb';
-import assert from 'assert';
 
 class DBClient {
   constructor() {
@@ -12,28 +11,30 @@ class DBClient {
     this.client.connect().then(() => {
       this.db = this.client.db(database);
     })
-    .catch((err) => {
-      console.error(`Error connecting to MongoDB: ${err.message}`);
-    });
+      .catch((err) => {
+        console.error(`Error connecting to MongoDB: ${err.message}`);
+      });
   }
 
   isAlive() {
-    return !!this.client && this.client.isConnected();
+    return this.client && this.client.isConnected();
   }
 
   async nbUsers() {
     try {
       return await this.db.collection('users').countDocuments();
-    } catch(err) {
+    } catch (err) {
       console.error(`Error counting users: ${err.message}`);
+      return 0;
     }
   }
 
   async nbFiles() {
     try {
       return await this.db.collection('files').countDocuments();
-    } catch(err) {
+    } catch (err) {
       console.error(`Error counting files: ${err.message}`);
+      return 0;
     }
   }
 }
