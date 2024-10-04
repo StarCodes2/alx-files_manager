@@ -50,12 +50,17 @@ class FilesController {
         }
       }
 
+      let parentObjId = 0;
+      if (parentId !== 0) {
+        parentObjId = ObjectId(parentId);
+      }
+
       if (type === 'folder') {
         const result = await dbClient.db.collection('files').insertOne({
           userId: ObjectId(userId),
           name,
           type,
-          parentId: ObjectId(parentId),
+          parentId: parentObjId,
         });
 
         return res.status(201).json({
@@ -69,7 +74,6 @@ class FilesController {
       }
 
       const path = process.env.FOLDER_PATH || '/tmp/files_manager';
-      let parentObjId = 0;
       let bufData = null;
       if (type === 'image') {
         bufData = Buffer.from(data, 'base64');
@@ -78,9 +82,6 @@ class FilesController {
       }
 
       if (!fs.existsSync(path)) { fs.mkdirSync(path); }
-      if (parentId !== 0) {
-        parentObjId = ObjectId(parentId);
-      }
 
       const fileName = uuidv4();
       const result = await dbClient.db.collection('files').insertOne({
