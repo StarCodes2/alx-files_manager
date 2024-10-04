@@ -2,6 +2,7 @@ const express = require('express');
 const AppController = require('../controllers/AppController');
 const UsersController = require('../controllers/UsersController');
 const AuthController = require('../controllers/AuthController');
+const FilesController = require('../controllers/FilesController');
 
 const router = express.Router();
 
@@ -27,6 +28,10 @@ router.get('/connect', async (req, res) => {
 
 router.get('/disconnect', async (req, res) => {
   await AuthController.getDisconnect(req, res);
+});
+
+router.post('/files', async (req, res) => {
+  await FilesController.postUpload(req, res);
 });
 
 module.exports = router;
