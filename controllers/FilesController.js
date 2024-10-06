@@ -23,7 +23,7 @@ class FilesController {
       }
 
       const { name, type } = req.body;
-      const parentId = req.body.parentId || '0';
+      const parentId = req.body.parentId || 0;
       const isPublic = req.body.isPublic || false;
       const { data } = req.body;
 
@@ -39,7 +39,7 @@ class FilesController {
         return res.status(400).json({ error: 'Missing data' });
       }
 
-      if (parentId !== '0') {
+      if (parentId !== 0) {
         const folder = await dbClient.db.collection('files').findOne({ _id: ObjectId(parentId) });
         if (!folder) {
           return res.status(400).json({ error: 'Parent not found' });
@@ -51,7 +51,7 @@ class FilesController {
       }
 
       let parentObjId = '0';
-      if (parentId !== '0') {
+      if (parentId !== 0) {
         parentObjId = ObjectId(parentId);
       }
 
@@ -90,7 +90,7 @@ class FilesController {
         type,
         isPublic,
         parentId: parentObjId,
-        localPath: path + '/' + fileName,
+        localPath: `${path}/${fileName}`,
       });
 
       const fd = fs.openSync(`${path}/${fileName}`, 'w');
@@ -152,7 +152,7 @@ class FilesController {
         parentId = ObjectId(parentId);
       }
 
-      const page = parseInt(req.query.page) || 0;
+      const page = parseInt(req.query.page, 10) || 0;
       const limit = 20;
       const skip = page * limit;
       const matchQuery = { userId: ObjectId(userId) };
