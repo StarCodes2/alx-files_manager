@@ -125,7 +125,7 @@ class FilesController {
       }
 
       const fileId = req.params.id;
-      const file = await dbClient.db.collection('files').findOne({ _id: ObjectId(fileId) });
+      const file = await dbClient.db.collection('files').findOne({ _id: ObjectId(fileId), userId });
       if (!file) {
         return res.status(404).json({ error: 'Not found' });
       }
@@ -144,10 +144,10 @@ class FilesController {
       const userId = await redisClient.get(`auth_${token}`);
       const user = await dbClient.db.collection('users').findOne({ _id: ObjectId(userId) });
       if (!user) {
-        return res.status(401).json({ error: 'Unathorized' });
+        return res.status(401).json({ error: 'Unauthorized' });
       }
 
-      let { parentId } = req.query;
+      let { parentId } = req.query || '0';
       if (parentId && parentId !== '0') {
         parentId = ObjectId(parentId);
       }
